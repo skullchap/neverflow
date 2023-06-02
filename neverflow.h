@@ -1,5 +1,5 @@
 /*
- * NEVERFLOW - v0.0.1 - Set of macros that guard against buffer overflows. 
+ * NEVERFLOW - v0.0.2 - Set of macros that guard against buffer overflows. 
  * Based on C99 VLA feature.
  * 
  * MIT LICENSE
@@ -21,6 +21,12 @@
  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
+ * Changes
+ *      0.0.2 - name mangling removed, 
+ *              added ARR() macro to ease passing arrays to functions.
+ *              Another neat sideeffect of it, is possibility of wrapping raw pointer 
+ *              and providing runtime bound checking safety.            
+ *      0.0.1 - initial release
  * Contributors <>
  *
  */
@@ -29,7 +35,7 @@
 #define NEVERFLOW_H_
 
 #define VERSION(MAJOR, MINOR, PATCH) (((MAJOR) << 22) | ((MINOR) << 12) | (PATCH))
-static const int NEVERFLOW_VERSION = VERSION(0, 0, 1);
+static const int NEVERFLOW_VERSION = VERSION(0, 0, 2);
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,16 +58,17 @@ typedef unsigned char uchar;
 #else
     #define autofree
 #endif
-#define NEW(TYPE, NAME, COUNT) autofree TYPE(*__nf##NAME)[COUNT] = ALLOCF(sizeof *__nf##NAME)
+#define NEW(TYPE, NAME, COUNT) autofree TYPE(*NAME)[COUNT] = ALLOCF(sizeof *NAME)
 #define AT(NAME, IDX)                                                       \
-    ((typeof(&(*__nf##NAME)[0]))                                            \
-    ((ASSERT(((size_t)IDX) * sizeof(*__nf##NAME)[0] < sizeof *__nf##NAME,   \
+    ((typeof(&(*NAME)[0]))                                            \
+    ((ASSERT(((size_t)IDX) * sizeof(*NAME)[0] < sizeof *NAME,   \
     "Buffer Overflow. Index [%lu] is out of range [0-%lu]",                 \
-    ((size_t)IDX), ((sizeof *__nf##NAME / sizeof(*__nf##NAME)[0]) - 1))),   \
-    ((uchar *)*__nf##NAME) + ((size_t)IDX) * sizeof(*__nf##NAME)[0]))
+    ((size_t)IDX), ((sizeof *NAME / sizeof(*NAME)[0]) - 1))),   \
+    ((uchar *)*NAME) + ((size_t)IDX) * sizeof(*NAME)[0]))
 #define GET(NAME, IDX) *AT(NAME, IDX)
 #define LET __auto_type
-#define SIZE(NAME) (sizeof *__nf##NAME)
-#define LEN(NAME) (sizeof *__nf##NAME / sizeof(*__nf##NAME)[0])
+#define SIZE(NAME) (sizeof *NAME)
+#define LEN(NAME) (sizeof *NAME / sizeof(*NAME)[0])
+#define ARR(TYPE, NAME, COUNT) TYPE(*NAME)[COUNT]
 
 #endif
