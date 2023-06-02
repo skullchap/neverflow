@@ -1,4 +1,7 @@
+<img src="https://github.com/skullchap/neverflow/assets/11740883/c6262840-10d4-4e0a-a386-48407b45f38a" width="350">
+
 # neverflow.h
+
 #### Small set of macros that guard against buffer overflows. Based on C99 VLA feature.
 
 *a little prologue...*
