@@ -30,6 +30,8 @@ main(void)
       *AT(myarr, 4) = 56;       // changing value directly by dereferencing
   
       *AT(myarr, 30) = 56;      // here comes the oopsie doopsie
+      // main.c:14: Buffer Overflow. Index [30] is out of range [0-9]
+      // main.c:14: Function: main
 }
 ```
 To semantically better distinguish getting address of element in array or element itself, **```GET```** macro was made and is a shorthand to **```*AT```**. It literally defined as
