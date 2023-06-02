@@ -1,5 +1,5 @@
 /*
- * NEVERFLOW - v0.0.1 - Set of macros that guard against buffer overflows. 
+ * NEVERFLOW - v0.0.2 - Set of macros that guard against buffer overflows. 
  * Based on C99 VLA feature.
  * 
  * MIT LICENSE
