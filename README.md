@@ -107,7 +107,7 @@ main(void)
 [0.0.2]  -  name mangling removed, 
             added ARR() macro to ease passing arrays to functions.
             Another neat sideeffect of it, is possibility of wrapping raw pointer 
-            and providing runtime bound checking safety.  
+            and providing runtime bound checking.  
 
 [0.0.1]  -  initial release
 
