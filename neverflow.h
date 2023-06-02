@@ -59,10 +59,10 @@ typedef unsigned char uchar;
     #define autofree
 #endif
 #define NEW(TYPE, NAME, COUNT) autofree TYPE(*NAME)[COUNT] = ALLOCF(sizeof *NAME)
-#define AT(NAME, IDX)                                                       \
-    ((typeof(&(*NAME)[0]))                                            \
+#define AT(NAME, IDX)                                           \
+    ((typeof(&(*NAME)[0]))                                      \
     ((ASSERT(((size_t)IDX) * sizeof(*NAME)[0] < sizeof *NAME,   \
-    "Buffer Overflow. Index [%lu] is out of range [0-%lu]",                 \
+    "Buffer Overflow. Index [%lu] is out of range [0-%lu]",     \
     ((size_t)IDX), ((sizeof *NAME / sizeof(*NAME)[0]) - 1))),   \
     ((uchar *)*NAME) + ((size_t)IDX) * sizeof(*NAME)[0]))
 #define GET(NAME, IDX) *AT(NAME, IDX)
