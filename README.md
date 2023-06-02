@@ -58,7 +58,58 @@ To disable auto cleanup define **```NO_AUTOFREE```** before including ```neverfl
 
 ...
 ```
-Notice how variable names come mangled by having ```__nf``` prefix to them. That was made intentionally to lower trigger of editor/IDE's suggestion dropdown.
+
+Passing array to function while preserving neverflow features done with **```ARR```** macro using this way:
+```c
+void 
+func(int count, ARR(int, arr, count))
+{
+      int c = LEN(arr);
+      printf("ELEM COUNT: %d\n", c); // 10
+
+      *AT(arr, 12) = 42; // fails
+      // main.c:13: Buffer Overflow. Index [12] is out of range [0-9]
+      // main.c:13: Function: func
+}
+
+int 
+main(void)
+{
+      NEW(int, myarr, 10); 
+
+      int count = LEN(myarr);
+      func(count, myarr);
+}
+```
+As a nice sideeffect of **```ARR```**, it's also possible to "wrap" raw pointers/arrays this way:
+```c
+void 
+func(int count, ARR(int, arr, count))
+{
+      int c = LEN(arr);
+      printf("ELEM COUNT: %d\n", c);
+      printf("6th elem: %d\n", GET(arr, 5)); // 42
+}
+
+int 
+main(void)
+{
+      void *p = malloc(10 * sizeof(int));
+      ARR(int, myarr, 10) = p;
+      *AT(myarr, 5) = 42;
+      func(LEN(myarr), myarr);
+}
+```
+
+
+# Changes
+
+[0.0.2]  -  name mangling removed, 
+            added ARR() macro to ease passing arrays to functions.
+            Another neat sideeffect of it, is possibility of wrapping raw pointer 
+            and providing runtime bound checking safety.  
+
+[0.0.1]  -  initial release
 
 # License
 MIT
