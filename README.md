@@ -1,4 +1,4 @@
-<img src="https://github.com/skullchap/neverflow/assets/11740883/c6262840-10d4-4e0a-a386-48407b45f38a" width="350">
+<img src="https://github.com/skullchap/neverflow/assets/11740883/b7fe10e0-3c05-4716-8a27-94b343f17bf0" width="350">
 
 # neverflow.h
 
