@@ -104,6 +104,11 @@ main(void)
 
 # Changes
 
+[0.0.3]  -  thanks to [**cornstalks**](https://news.ycombinator.com/item?id=36168723) from HN post for pointing out that functions passed to **```AT()```** 
+            could evaluate multiple times.
+            **```AT()```** macro changed to statement expression to evaluate IDX once, 
+            by assigning it local idx variable.
+
 [0.0.2]  -  name mangling removed, 
             added ARR() macro to ease passing arrays to functions.
             Another neat sideeffect of it, is possibility of wrapping raw pointer 
