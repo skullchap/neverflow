@@ -1,5 +1,5 @@
 /*
- * NEVERFLOW - v0.0.2 - Set of macros that guard against buffer overflows. 
+ * NEVERFLOW - v0.0.3 - Set of macros that guard against buffer overflows. 
  * Based on C99 VLA feature.
  * 
  * MIT LICENSE
@@ -22,12 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * Changes
+ *      0.0.3 - thanks to 'cornstalks' from HN post for pointing out that functions passed to AT() 
+ *              could evaluate multiple times.
+ *              AT() macro changed to statement expression to evaluate IDX once, 
+ *              by assigning it to local idx variable.
  *      0.0.2 - name mangling removed, 
  *              added ARR() macro to ease passing arrays to functions.
  *              Another neat sideeffect of it, is possibility of wrapping raw pointer 
  *              and providing runtime bound checking safety.            
  *      0.0.1 - initial release
- * Contributors <>
+ *
+ * Contributors <cornstalks>
  *
  */
 
@@ -35,7 +40,7 @@
 #define NEVERFLOW_H_
 
 #define VERSION(MAJOR, MINOR, PATCH) (((MAJOR) << 22) | ((MINOR) << 12) | (PATCH))
-static const int NEVERFLOW_VERSION = VERSION(0, 0, 2);
+static const int NEVERFLOW_VERSION = VERSION(0, 0, 3);
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -61,10 +66,11 @@ typedef unsigned char uchar;
 #define NEW(TYPE, NAME, COUNT) autofree TYPE(*NAME)[COUNT] = ALLOCF(sizeof *NAME)
 #define AT(NAME, IDX)                                           \
     ((typeof(&(*NAME)[0]))                                      \
-    ((ASSERT(((size_t)IDX) * sizeof(*NAME)[0] < sizeof *NAME,   \
+    ({size_t idx=IDX;                                           \
+    (ASSERT(idx * sizeof(*NAME)[0] < sizeof *NAME,              \
     "Buffer Overflow. Index [%lu] is out of range [0-%lu]",     \
-    ((size_t)IDX), ((sizeof *NAME / sizeof(*NAME)[0]) - 1))),   \
-    ((uchar *)*NAME) + ((size_t)IDX) * sizeof(*NAME)[0]))
+    idx, ((sizeof *NAME / sizeof(*NAME)[0]) - 1))),             \
+    ((uchar *)*NAME) + idx * sizeof(*NAME)[0];}))
 #define GET(NAME, IDX) *AT(NAME, IDX)
 #define LET __auto_type
 #define SIZE(NAME) (sizeof *NAME)
